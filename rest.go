@@ -24,6 +24,7 @@ var DATA = make(map[string]string)
 
 // default response from server, should be only top level domain, anything else give a 404
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
+
 	log.Println("Serving:", r.URL.Path, "from", r.Host)
 	w.WriteHeader(http.StatusNotFound)
 	Body := "Thanks for visiting! \n"
@@ -32,6 +33,7 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 
 // handle /time to the server
 func timeHandler(w http.ResponseWriter, r *http.Request) {
+
 	log.Println("Serving:", r.URL.Path, "from", r.Host)
 	t := time.Now().Format(time.RFC1123)
 	Body := "The current time is: " + t + "\n"
@@ -40,6 +42,7 @@ func timeHandler(w http.ResponseWriter, r *http.Request) {
 
 // add user to the server
 func addHandler(w http.ResponseWriter, r *http.Request) {
+
 	log.Println("Serving:", r.URL.Path, "from", r.Host, r.Method)
 	if r.Method != http.MethodPost {
 		http.Error(w, "Error:", http.StatusMethodNotAllowed)
@@ -73,6 +76,7 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 
 // return the info from the server, with valid credentials only
 func getHandler(w http.ResponseWriter, r *http.Request) {
+
 	log.Println("Serving:", r.URL.Path, "from", r.Host, r.Method)
 	if r.Method != http.MethodGet {
 		http.Error(w, "Error:", http.StatusMethodNotAllowed)
@@ -109,6 +113,7 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 
 // delete a mapped user/password
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
+
 	log.Println("Serving:", r.URL.Path, "from", r.Host, r.Method)
 	if r.Method != http.MethodDelete {
 		http.Error(w, "Error:", http.StatusMethodNotAllowed)
@@ -147,7 +152,17 @@ func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+// if we receieve a bad request kill the server
+func errorHandler(w http.ResponseWriter, r *http.Request) {
+
+	log.Println("Serving:", r.URL.Path, "from", r.Host, r.Method)
+	Body := "Error with request terminating server \n"
+	fmt.Fprintf(w, "%s", Body)
+	panic("bad request")
+}
+
 func main() {
+
 	args := os.Args
 	if len(args) != 1 {
 		PORT = ":" + args[1]
@@ -166,6 +181,7 @@ func main() {
 	mux.Handle("/add", http.HandlerFunc(addHandler))
 	mux.Handle("/get", http.HandlerFunc(getHandler))
 	mux.Handle("/delete", http.HandlerFunc(deleteHandler))
+	mux.Handle("/error", http.HandlerFunc(errorHandler))
 	mux.Handle("/", http.HandlerFunc(defaultHandler))
 
 	fmt.Println("Ready to serve at", PORT)
