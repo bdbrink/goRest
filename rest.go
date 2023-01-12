@@ -22,6 +22,7 @@ var user User
 var PORT = ":1234"
 var DATA = make(map[string]string)
 
+// default response from server, should be only top level domain, anything else give a 404
 func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Serving:", r.URL.Path, "from", r.Host)
 	w.WriteHeader(http.StatusNotFound)
@@ -29,6 +30,7 @@ func defaultHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s", Body)
 }
 
+// handle /time to the server
 func timeHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Serving:", r.URL.Path, "from", r.Host)
 	t := time.Now().Format(time.RFC1123)
@@ -36,6 +38,7 @@ func timeHandler(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s", Body)
 }
 
+// add user to the server
 func addHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Serving:", r.URL.Path, "from", r.Host, r.Method)
 	if r.Method != http.MethodPost {
@@ -57,6 +60,7 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// need a valid username
 	if user.Username != "" {
 		DATA[user.Username] = user.Password
 		log.Println(DATA)
@@ -67,6 +71,7 @@ func addHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// return the info from the server, with valid credentials only
 func getHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Serving:", r.URL.Path, "from", r.Host, r.Method)
 	if r.Method != http.MethodGet {
@@ -102,6 +107,7 @@ func getHandler(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+// delete a mapped user/password
 func deleteHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Serving:", r.URL.Path, "from", r.Host, r.Method)
 	if r.Method != http.MethodDelete {
