@@ -161,6 +161,13 @@ func errorHandler(w http.ResponseWriter, r *http.Request) {
 	panic("bad request")
 }
 
+func memeHandler(w http.ResponseWriter, r *http.Request) {
+
+	log.Println("Serving:", r.URL.Path, "from", r.Host, r.Method)
+	Body := "What kind of meme do you want to see ? \n"
+	fmt.Fprintf(w, "%s", Body)
+}
+
 func main() {
 
 	args := os.Args
