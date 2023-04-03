@@ -190,6 +190,7 @@ func main() {
 	mux.Handle("/delete", http.HandlerFunc(deleteHandler))
 	mux.Handle("/error", http.HandlerFunc(errorHandler))
 	mux.Handle("/", http.HandlerFunc(defaultHandler))
+	mux.Handle("/meme", http.HandlerFunc(memeHandler))
 
 	fmt.Println("Ready to serve at", PORT)
 	err := s.ListenAndServe()
