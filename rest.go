@@ -161,6 +161,8 @@ func errorHandler(w http.ResponseWriter, r *http.Request) {
 	panic("bad request")
 }
 
+// display meme image with text from server
+// TODO
 func memeHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("Serving:", r.URL.Path, "from", r.Host, r.Method)
