@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"os"
 	"time"
+
+	googlesearch "github.com/rocketlaunchr/google-search"
 )
 
 // credentials to interact with server
@@ -161,13 +163,17 @@ func errorHandler(w http.ResponseWriter, r *http.Request) {
 	panic("bad request")
 }
 
-// display meme image with text from server
-// TODO
+// display top result from dank memes
 func memeHandler(w http.ResponseWriter, r *http.Request) {
 
 	log.Println("Serving:", r.URL.Path, "from", r.Host, r.Method)
-	Body := "What kind of meme do you want to see ? \n"
+	Body := "Searching dank memes \n"
 	fmt.Fprintf(w, "%s", Body)
+
+	searchResults, _ := googlesearch.Search(nil, "dank memes")
+	resultTop := searchResults[0].Description
+
+	fmt.Fprintln(w, resultTop)
 }
 
 func main() {
